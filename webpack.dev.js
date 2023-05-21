@@ -1,6 +1,6 @@
 const path = require('path')//引入内置path方便得到绝对路径
 const HtmlWebpackPlugin = require('html-webpack-plugin')//引入模板组件
-
+const resolve = dir => path.resolve(__dirname, dir);
 
 module.exports = {
     mode: 'development',//开发模式
@@ -10,10 +10,13 @@ module.exports = {
         filename: 'bundle.js' //文件名
     },
     devServer: {
-        
+
     },
     resolve: {
-        extensions:['.ts', '.js', '.cjs', '.json'] //配置文件引入时省略后缀名
+        extensions:['.ts', '.js', '.cjs', '.json'], //配置文件引入时省略后缀名
+        alias: {
+            '@': resolve('@', './src')
+        }
     },
     module: {
         rules: [
@@ -27,5 +30,6 @@ module.exports = {
         new HtmlWebpackPlugin({ 
             template: './index.html' //使用模板地址
         })
-    ]
+    ],
+    
 }
