@@ -1,4 +1,4 @@
-import { REACT_ELEMENT_TYPE } from '../shared/ReactSymbols';
+import { REACT_ELEMENT_TYPE } from '@/shared/ReactSymbols';
 import {
 	Type,
 	Key,
@@ -6,7 +6,7 @@ import {
 	Props,
 	ReactElementType,
 	ElementType
-} from '../shared/ReactTypes';
+} from '@/shared/ReactTypes';
 
 // ReactElement
 
@@ -22,7 +22,7 @@ const ReactElement = function (
 		key,
 		ref,
 		props,
-		__mark: 'KaSong'
+		__mark: '9jian'
 	};
 	return element;
 };

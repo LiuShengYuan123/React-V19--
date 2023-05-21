@@ -1,5 +1,4 @@
 {
-	"compileOnSave": true,
 	"compilerOptions": {
 		"target": "ESNext",
 		"useDefineForClassFields": true,
@@ -16,6 +15,10 @@
 		"noUnusedParameters": true,
 		"noImplicitReturns": false,
 		"skipLibCheck": true,
-		"baseUrl": "./src"
-	}
+		"baseUrl": "./",
+        "paths": {
+            "@/*": ["src/*"]
+        }
+	},
+    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
 }
