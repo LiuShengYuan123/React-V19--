@@ -1,12 +1,33 @@
 import { beginWork } from './beginWork';
 import { completeWork } from './completeWork';
-import { FiberNode } from './fiber';
+import { createWorkInProgress, FiberNode, FiberRootNode } from './fiber';
+import { HostRoot } from './workTags';
 
 // 工作节点，因为fiber节点是链表形式存在，这个变量就代表指针，当前处理到哪个节点了
 let workInProgress: FiberNode | null = null;
 
 function prepareFreshStack(fiber: FiberNode) {
 	workInProgress = fiber;
+}
+
+export function scheduleUpdateOnFiber(fiber: FiberNode) {
+	// TODO 调度功能
+	// fiberRootNode
+	const root = markUpdateFromFiberToRoot(fiber);
+	renderRoot(root);
+}
+
+function markUpdateFromFiberToRoot(fiber: FiberNode) {
+	let node = fiber;
+	let parent = node.return;
+	while (parent !== null) {
+		node = parent;
+		parent = node.return;
+	}
+	if (node.tag === HostRoot) {
+		return node.stateNode;
+	}
+	return null;
 }
 
 function renderRoot(root: FiberNode) {
