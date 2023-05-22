@@ -1,18 +1,23 @@
 import { beginWork } from './beginWork';
+import { commitMutationEffects } from './commitWork';
 import { completeWork } from './completeWork';
 import { createWorkInProgress, FiberNode, FiberRootNode } from './fiber';
+import { MutationMask, NoFlags } from './fiberFlags';
 import { HostRoot } from './workTags';
 
-// 工作节点，因为fiber节点是链表形式存在，这个变量就代表指针，当前处理到哪个节点了
 let workInProgress: FiberNode | null = null;
 
-function prepareFreshStack(fiber: FiberNode) {
-	workInProgress = fiber;
+function prepareFreshStack(root: FiberRootNode) {
+	// root.current 中间空节点
+	// workInProgress初始化的时候指向中间空节点
+	workInProgress = createWorkInProgress(root.current, {});
 }
 
 export function scheduleUpdateOnFiber(fiber: FiberNode) {
 	// TODO 调度功能
 	// fiberRootNode
+	
+	// 获取根节点
 	const root = markUpdateFromFiberToRoot(fiber);
 	renderRoot(root);
 }
@@ -30,37 +35,71 @@ function markUpdateFromFiberToRoot(fiber: FiberNode) {
 	return null;
 }
 
-function renderRoot(root: FiberNode) {
+function renderRoot(root: FiberRootNode) {
 	// 初始化
+	// 初始化wip
 	prepareFreshStack(root);
 
-    // 执行worlLoop发生错误就初始化，然后重新执行workLoop
 	do {
 		try {
 			workLoop();
 			break;
 		} catch (e) {
-			console.warn('workLoop发生错误', e);
+				console.warn('workLoop发生错误', e);
+
 			workInProgress = null;
 		}
 	} while (true);
+
+	const finishedWork = root.current.alternate;
+	root.finishedWork = finishedWork;
+
+	// wip fiberNode树 树中的flags
+	commitRoot(root);
+}
+
+function commitRoot(root: FiberRootNode) {
+	const finishedWork = root.finishedWork;
+
+	if (finishedWork === null) {
+		return;
+	}
+		console.warn('commit阶段开始', finishedWork);
+	// 重置
+	root.finishedWork = null;
+
+	// 判断是否存在3个子阶段需要执行的操作
+	// root flags root subtreeFlags
+	const subtreeHasEffect =
+		(finishedWork.subtreeFlags & MutationMask) !== NoFlags;
+	const rootHasEffect = (finishedWork.flags & MutationMask) !== NoFlags;
+
+	if (subtreeHasEffect || rootHasEffect) {
+		// beforeMutation
+		// mutation Placement
+		commitMutationEffects(finishedWork);
+
+		root.current = finishedWork;
+
+		// layout
+	} else {
+		root.current = finishedWork;
+	}
 }
 
 function workLoop() {
-    // 根据指针进行遍历
 	while (workInProgress !== null) {
 		performUnitOfWork(workInProgress);
 	}
 }
 
+// fiber 当前wip
 function performUnitOfWork(fiber: FiberNode) {
 	const next = beginWork(fiber);
-
-    // 处理完之后把 props修改成已完成的状态
 	fiber.memoizedProps = fiber.pendingProps;
 
 	if (next === null) {
-        // 没有子节点之后进入归阶段
+		// fiber代表父
 		completeUnitOfWork(fiber);
 	} else {
 		workInProgress = next;

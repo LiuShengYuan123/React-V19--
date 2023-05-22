@@ -5,7 +5,7 @@ export type WorkTag =
 	| typeof HostText;
 
 export const FunctionComponent = 0;
-export const HostRoot = 3;
+export const HostRoot = 3;   // createRoot挂载的根节点
 
 export const HostComponent = 5;
 // <div>123</div>
