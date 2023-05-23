@@ -2,10 +2,17 @@ import { ReactElementType } from '@/shared/ReactTypes';
 import { mountChildFibers, reconcileChildFibers } from './childFibers';
 import { FiberNode } from './fiber';
 import { processUpdateQueue, UpdateQueue } from './updateQueue';
-import { HostComponent, HostRoot, HostText } from './workTags';
+import {
+	FunctionComponent,
+	HostComponent,
+	HostRoot,
+	HostText
+} from './workTags';
+import { renderWithHooks } from './fiberHooks';
+
 
 // 递归中的递阶段
-export const beginWork = (wip: FiberNode) => { 
+export const beginWork = (wip: FiberNode) => {
 	// 比较，返回子fiberNode
 	switch (wip.tag) {
 		case HostRoot:
@@ -14,12 +21,20 @@ export const beginWork = (wip: FiberNode) => {
 			return updateHostComponent(wip);
 		case HostText:
 			return null;
+		case FunctionComponent:
+			return updateFunctionComponent(wip);
 		default:
 			console.warn('beginWork未实现的类型');
 			break;
 	}
 	return null;
 };
+
+function updateFunctionComponent(wip: FiberNode) {
+	const nextChildren = renderWithHooks(wip);
+	reconcileChildren(wip, nextChildren);
+	return wip.child;
+}
 
 function updateHostRoot(wip: FiberNode) {
 	const baseState = wip.memoizedState;
