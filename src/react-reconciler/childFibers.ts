@@ -28,6 +28,8 @@ function ChildReconciler(shouldTrackEffects: boolean) {
     }
 
     function placeSingleChild(fiber: FiberNode) {
+
+        // 如果老的节点没有，则标记为要更新
         if (shouldTrackEffects && fiber.alternate === null) {
             fiber.flags |= Placement;
         }
@@ -45,6 +47,8 @@ function ChildReconciler(shouldTrackEffects: boolean) {
             switch (newChild.$$typeof) {
                 case REACT_ELEMENT_TYPE:
                     return placeSingleChild(
+                        // 用新element创建新fiber, reture执行父级fiber
+                        // 返回父级节点
                         reconcileSingleElement(returnFiber, currentFiber, newChild)
                     );
                 default:

@@ -21,5 +21,6 @@ console.log(App)
 import ReactDom from '@/react-dom'
 const root: any = document.querySelector('#root')
 console.log('ReactDom', ReactDom)
+debugger
 ReactDom.createRoot(root).render(App)
 console.log(222) 
