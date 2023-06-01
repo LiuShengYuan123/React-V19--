@@ -5,8 +5,8 @@ export type WorkTag =
 	| typeof HostText;
 
 export const FunctionComponent = 0;
-export const HostRoot = 3;   // createRoot挂载的根节点
+export const HostRoot = 3;   // hsotroot代表生成的中间空节点
 
-export const HostComponent = 5;
+export const HostComponent = 5;   // 原生节点  div span等
 // <div>123</div>
 export const HostText = 6;

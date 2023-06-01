@@ -12,8 +12,11 @@ function ChildReconciler(shouldTrackEffects: boolean) {
         element: ReactElementType
     ) {
         // 根据element创建fiber
+        // 在这里给子节点挂的return 和父fiber进行关联的
         const fiber = createFiberFromElement(element);
         fiber.return = returnFiber;
+
+        // 返回的是新子元素创建的fiber对象
         return fiber;
     }
 
@@ -48,7 +51,7 @@ function ChildReconciler(shouldTrackEffects: boolean) {
                 case REACT_ELEMENT_TYPE:
                     return placeSingleChild(
                         // 用新element创建新fiber, reture执行父级fiber
-                        // 返回父级节点
+                        // 返回子元素fiber对象
                         reconcileSingleElement(returnFiber, currentFiber, newChild)
                     );
                 default:

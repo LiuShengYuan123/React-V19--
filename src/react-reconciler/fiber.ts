@@ -72,6 +72,8 @@ export class FiberRootNode {
 	container: Container;
 	current: FiberNode;
 	finishedWork: FiberNode | null;
+
+	// container真实根div    hostRootFiber 空fiber对象，tag=hostRoot
 	constructor(container: Container, hostRootFiber: FiberNode) {
 		this.container = container;
 		this.current = hostRootFiber;
@@ -81,7 +83,7 @@ export class FiberRootNode {
 }
 
 export const createWorkInProgress = (
-	current: FiberNode,
+	current: FiberNode,  // 中间节点
 	pendingProps: Props
 ): FiberNode => {
 	let wip = current.alternate;
