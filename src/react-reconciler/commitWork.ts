@@ -7,7 +7,7 @@ let nextEffect: FiberNode | null = null;
 
 export const commitMutationEffects = (finishedWork: FiberNode) => {
     nextEffect = finishedWork;
-    debugger
+
     while (nextEffect !== null) {
         // 向下遍历
         const child: FiberNode | null = nextEffect.child;

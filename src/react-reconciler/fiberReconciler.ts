@@ -28,6 +28,8 @@ export function updateContainer(
 	root: FiberRootNode
 ) {
 	const hostRootFiber = root.current;
+
+	// update对象就是接下来要更新的element对象
 	const update = createUpdate<ReactElementType | null>(element);
 
 	// 给update赋值

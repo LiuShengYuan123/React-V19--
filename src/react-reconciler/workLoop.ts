@@ -14,6 +14,7 @@ function prepareFreshStack(root: FiberRootNode) {
 }
 
 export function scheduleUpdateOnFiber(fiber: FiberNode) {
+	debugger
 	// TODO 调度功能
 	// fiberRootNode
 	
@@ -95,11 +96,16 @@ function workLoop() {
 
 // fiber 当前wip
 function performUnitOfWork(fiber: FiberNode) {
+	// 递
 	const next = beginWork(fiber);
+
+	// pendingProps 代表处理前的属性
+	// memoizedProps代表处理后
 	fiber.memoizedProps = fiber.pendingProps;
 
 	if (next === null) {
 		// fiber代表父
+		// 归
 		completeUnitOfWork(fiber);
 	} else {
 		workInProgress = next;
