@@ -154,6 +154,8 @@ function dispatchSetState<State>(
 	const update = createUpdate(action);
 	enqueueUpdate(updateQueue, update);
 	debugger
+
+	// 好熟悉的感觉
 	scheduleUpdateOnFiber(fiber);
 }
 
@@ -163,11 +165,14 @@ function mountWorkInProgresHook(): Hook {
 		updateQueue: null,
 		next: null
 	};
+
+	// 当前在处理的Hook
 	if (workInProgressHook === null) {
 		// mount时 第一个hook
 		if (currentlyRenderingFiber === null) {
 			throw new Error('请在函数组件内调用hook');
 		} else {
+			// 正确执行hook
 			workInProgressHook = hook;
 			currentlyRenderingFiber.memoizedState = workInProgressHook;
 		}
