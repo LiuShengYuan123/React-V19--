@@ -11,9 +11,9 @@ import { ReactElementType } from '@/shared/ReactTypes';
 import { useState } from '@/react';
 
 function App() {
-	const [num, setNum] = useState(3);
-	window.setNum = setNum;
-	return num === 3 ? <Child onClick={() => setNum(111)} /> : <div>{num}</div>;
+	const [num, setNum] = useState(100);
+
+	return <div onClickCapture={() => setNum(num + 1)}>{num}</div>;
 }
 
 function Child() {
@@ -22,5 +22,4 @@ function Child() {
 import ReactDom from '@/react-dom'
 const root: any = document.querySelector('#root')
 
-debugger
 ReactDom.createRoot(root).render(<App />)

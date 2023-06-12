@@ -1,4 +1,4 @@
-import { REACT_ELEMENT_TYPE } from '@/shared/ReactSymbols';
+import { REACT_ELEMENT_TYPE, REACT_FRAGMENT_TYPE } from '@/shared/ReactSymbols';
 import {
 	Type,
 	Key,
@@ -22,43 +22,46 @@ const ReactElement = function (
 		key,
 		ref,
 		props,
-		__mark: '9jian'
+		__mark: 'KaSong'
 	};
 	return element;
 };
 
-// 1. 元素类型  2. 属性  3.子元素
-export const jsx = (type: ElementType, config: any, ...maybeChildren: any) => {
+export function isValidElement(object: any) {
+	return (
+		typeof object === 'object' &&
+		object !== null &&
+		object.$$typeof === REACT_ELEMENT_TYPE
+	);
+}
+
+export const createElement = (
+	type: ElementType,
+	config: any,
+	...maybeChildren: any
+) => {
 	let key: Key = null;
 	const props: Props = {};
 	let ref: Ref = null;
 
-    // 遍历第二个参数对象中的属性
 	for (const prop in config) {
 		const val = config[prop];
-        
-        // 如果为key，赋值
 		if (prop === 'key') {
 			if (val !== undefined) {
 				key = '' + val;
 			}
 			continue;
 		}
-        // 如果为ref， 赋值
 		if (prop === 'ref') {
 			if (val !== undefined) {
 				ref = val;
 			}
 			continue;
 		}
-
-        // 给props赋值
 		if ({}.hasOwnProperty.call(config, prop)) {
 			props[prop] = val;
 		}
 	}
-
-    // 处理子元素
 	const maybeChildrenLength = maybeChildren.length;
 	if (maybeChildrenLength) {
 		if (maybeChildrenLength === 1) {
@@ -70,10 +73,37 @@ export const jsx = (type: ElementType, config: any, ...maybeChildren: any) => {
 	return ReactElement(type, key, ref, props);
 };
 
-export function isValidElement(object: any) {
-	return (
-		typeof object === 'object' &&
-		object !== null &&
-		object.$$typeof === REACT_ELEMENT_TYPE
-	);
-}
+export const Fragment = REACT_FRAGMENT_TYPE;
+
+export const jsx = (type: ElementType, config: any, maybeKey: any) => {
+	let key: Key = null;
+	const props: Props = {};
+	let ref: Ref = null;
+
+	if (maybeKey !== undefined) {
+		key = '' + maybeKey;
+	}
+
+	for (const prop in config) {
+		const val = config[prop];
+		if (prop === 'key') {
+			if (val !== undefined) {
+				key = '' + val;
+			}
+			continue;
+		}
+		if (prop === 'ref') {
+			if (val !== undefined) {
+				ref = val;
+			}
+			continue;
+		}
+		if ({}.hasOwnProperty.call(config, prop)) {
+			props[prop] = val;
+		}
+	}
+
+	return ReactElement(type, key, ref, props);
+};
+
+export const jsxDEV = jsx;
