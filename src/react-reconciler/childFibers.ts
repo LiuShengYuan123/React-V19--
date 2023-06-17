@@ -139,6 +139,7 @@ function ChildReconciler(shouldTrackEffects: boolean) {
         for (let i = 0; i < newChild.length; i++) {
             // 2.遍历newChild，寻找是否可复用
             const after = newChild[i];
+
             const newFiber = updateFromMap(returnFiber, existingChildren, i, after);
 
             if (newFiber === null) {
@@ -191,6 +192,8 @@ function ChildReconciler(shouldTrackEffects: boolean) {
         element: any
     ): FiberNode | null {
         const keyToUse = element.key !== null ? element.key : index;
+
+        // 老节点的fiber对象
         const before = existingChildren.get(keyToUse);
 
         // HostText
@@ -219,6 +222,13 @@ function ChildReconciler(shouldTrackEffects: boolean) {
                     }
                     if (before) {
                         if (before.type === element.type) {
+
+                            // 从map中删掉代表可以复用
+                            // 剩下的最后都会被移除
+                            // 1 2 3  老
+                            // 2 3   新
+
+
                             existingChildren.delete(keyToUse);
                             return useFiber(before, element.props);
                         }

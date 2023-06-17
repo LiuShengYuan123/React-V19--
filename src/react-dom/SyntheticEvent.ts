@@ -31,6 +31,9 @@ export function initEvent(container: Container, eventType: string) {
     }
     console.log('初始化事件：', eventType);
 
+    // debugger
+
+    // 在react中事件都绑定在  rect的容器根节点
     container.addEventListener(eventType, (e) => {
         dispatchEvent(container, eventType, e);
     });
@@ -57,8 +60,7 @@ function dispatchEvent(container: Container, eventType: string, e: Event) {
         console.warn('事件不存在target', e);
         return;
     }
-
-    // 1. 收集沿途的事件
+    // 1. 收集沿途的事件   点击之后将会触发哪些事件
     const { bubble, capture } = collectPaths(
         targetElement as DOMElement,
         container,
@@ -67,11 +69,11 @@ function dispatchEvent(container: Container, eventType: string, e: Event) {
     // 2. 构造合成事件
     const se = createSyntheticEvent(e);
 
-    // 3. 遍历captue
+    // 3. 遍历captue   执行捕获事件
     triggerEventFlow(capture, se);
 
     if (!se.__stopPropagation) {
-        // 4. 遍历bubble
+        // 4. 遍历bubble   执行冒泡事件
         triggerEventFlow(bubble, se);
     }
 }
@@ -107,10 +109,15 @@ function collectPaths(
 
     while (targetElement && targetElement !== container) {
         // 收集
+
+        // 这里可以获取真实dom对应的props
         const elementProps = targetElement[elementPropsKey];
         if (elementProps) {
             // click -> onClick onClickCapture
             const callbackNameList = getEventCallbackNameFromEventType(eventType);
+
+            console.log('callbackNameList',callbackNameList)
+
             if (callbackNameList) {
                 callbackNameList.forEach((callbackName, i) => {
                     const eventCallback = elementProps[callbackName];
@@ -127,5 +134,7 @@ function collectPaths(
         }
         targetElement = targetElement.parentNode as DOMElement;
     }
+
+    console.log('paths', paths)
     return paths;
 }

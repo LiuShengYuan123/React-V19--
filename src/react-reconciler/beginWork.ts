@@ -14,6 +14,7 @@ import {
 
 // 递归中的递阶段
 export const beginWork = (wip: FiberNode, renderLane: Lane) => {
+	debugger
 	// 比较，返回子fiberNode
 	switch (wip.tag) {
 		case HostRoot:

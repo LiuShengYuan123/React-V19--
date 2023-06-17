@@ -10,16 +10,36 @@ import { ReactElementType } from '@/shared/ReactTypes';
 // })
 import { useState } from '@/react';
 
+
+
 function App() {
-	const [num, setNum] = useState(100);
+	// const [num, setNum] = useState(100);
+	const [arr, setArr] = useState(['one', 'two', 'three'])
 
-	return <div onClickCapture={() => setNum(num + 1)}>{num}</div>;
+
+	function handle_click() {
+		debugger
+		setArr([ 'two', 'three','one'])
+	}
+
+	// a => a
+	return (
+		<div >
+			<h1 onClick={handle_click}>点我改变数组</h1>
+			<ul>
+				{
+					arr.map((item) => {
+						return <li key={item}>{item}</li>
+					})
+				}
+			</ul>
+		</div>
+	);	
 }
 
-function Child() {
-	return <span>九剑react</span>;
-}
+
 import ReactDom from '@/react-dom'
 const root: any = document.querySelector('#root')
 
+// debugger
 ReactDom.createRoot(root).render(<App />)

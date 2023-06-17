@@ -70,6 +70,7 @@ const commitMutaitonEffectsOnFiber = (
         finishedWork.flags &= ~Placement;
     }
     if ((flags & Update) !== NoFlags) {
+        // 更新真实dom元素上的__props属性
         commitUpdate(finishedWork);
         finishedWork.flags &= ~Update;
     }

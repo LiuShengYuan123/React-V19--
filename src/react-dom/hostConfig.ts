@@ -8,6 +8,8 @@ export type Instance = Element;
 export type TextInstance = Text;
 
 // export const createInstance = (type: string, props: any): Instance => {
+
+// 还记得在哪里触发的？归
 export const createInstance = (type: string, props: Props): Instance => {
 	// TODO 处理props
 	const element = document.createElement(type) as unknown;
