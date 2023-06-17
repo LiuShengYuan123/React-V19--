@@ -8,31 +8,70 @@ import { ReactElementType } from '@/shared/ReactTypes';
 //       children: "ssss"
 //     })
 // })
-import { useState } from '@/react';
+import { useState, useEffect } from '@/react';
 
+function effect1() {
+	console.log('useEffect回调111执行')
 
+	return () => {
+		console.log('effect1111 销毁')
+	}
+}
+
+function effect2() {
+	console.log('useEffect回调2222执行')
+
+	return () => {
+		console.log('effect222 销毁')
+	}
+}
+
+function effect3() {
+	console.log('useEffect回调333执行')
+
+	return () => {
+		console.log('effect3333 销毁')
+	}
+}
+
+function effect4() {
+	console.log('useEffect回调4444执行')
+
+	return () => {
+		console.log('effect444 销毁')
+	}
+}
+
+function Bpp() {
+
+	useEffect(effect3)
+
+	useEffect(effect4)
+
+	return (
+		<h1>Bpp</h1>
+	)
+}
 
 function App() {
-	// const [num, setNum] = useState(100);
-	const [arr, setArr] = useState(['one', 'two', 'three'])
+	const [count, setCount] = useState(0)
 
+	useEffect(effect1)
+
+	useEffect(effect2)
 
 	function handle_click() {
-		debugger
-		setArr([ 'two', 'three','one'])
+		setCount((count) => {
+			return count + 1
+		})
 	}
 
 	// a => a
 	return (
 		<div >
-			<h1 onClick={handle_click}>点我改变数组</h1>
-			<ul>
-				{
-					arr.map((item) => {
-						return <li key={item}>{item}</li>
-					})
-				}
-			</ul>
+			<h1 onClick={handle_click}>点我新增111</h1>
+			<Bpp />
+			{/* <h2>{count}</h2> */}
 		</div>
 	);	
 }

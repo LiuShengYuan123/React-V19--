@@ -16,13 +16,13 @@ import {
 } from './workTags';
 
 function markUpdate(fiber: FiberNode) {
-	debugger
+	// debugger
 	fiber.flags |= Update;
 }
 
 export const completeWork = (wip: FiberNode) => {
 	// 递归中的归
-	debugger
+	// debugger
 	const newProps = wip.pendingProps;
 	const current = wip.alternate;
 

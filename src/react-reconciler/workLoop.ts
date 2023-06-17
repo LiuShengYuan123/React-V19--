@@ -61,7 +61,12 @@ function ensureRootIsScheduled(root: FiberRootNode) {
 		console.log('在微任务中调度，优先级：', updateLane);
 
 		// [performSyncWorkOnRoot, performSyncWorkOnRoot, performSyncWorkOnRoot]
+
+		// 往数组中添加回调函数， performSyncWorkOnRoot
+		// performSyncWorkOnRoot 就是执行render的入口
 		scheduleSyncCallback(performSyncWorkOnRoot.bind(null, root, updateLane));
+
+		// 在微任务回调中执行 flushSyncCallbacks
 		scheduleMicroTask(flushSyncCallbacks);
 	} else {
 		// 其他优先级 用宏任务调度
@@ -86,7 +91,12 @@ function markUpdateFromFiberToRoot(fiber: FiberNode) {
 }
 
 function performSyncWorkOnRoot(root: FiberRootNode, lane: Lane) {
+
+	console.log('performSyncWorkOnRoot 执行')
+	debugger
 	const nextLane = getHighestPriorityLane(root.pendingLanes);
+
+
 
 	if (nextLane !== SyncLane) {
 		// 其他比SyncLane低的优先级
@@ -125,7 +135,7 @@ function performSyncWorkOnRoot(root: FiberRootNode, lane: Lane) {
 function commitRoot(root: FiberRootNode) {
 	const finishedWork = root.finishedWork;
 
-	debugger
+	// debugger
 
 	if (finishedWork === null) {
 		return;
@@ -152,7 +162,10 @@ function commitRoot(root: FiberRootNode) {
 	) {
 		if (!rootDoesHasPassiveEffects) {
 			rootDoesHasPassiveEffects = true;
-			flushPassiveEffects(root.pendingPassiveEffects);
+			// 宏任务的回调中执行的effect
+			setTimeout(() => {
+				flushPassiveEffects(root.pendingPassiveEffects);
+			});
 			// 调度副作用
 			// scheduleCallback(3, () => {
 			// 	// 执行副作用
@@ -219,7 +232,7 @@ function performUnitOfWork(fiber: FiberNode) {
 }
 
 function completeUnitOfWork(fiber: FiberNode) {
-	debugger
+	// debugger
 	let node: FiberNode | null = fiber;
 
 	do {
