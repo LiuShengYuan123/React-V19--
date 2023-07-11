@@ -65,7 +65,6 @@ function ensureRootIsScheduled(root: FiberRootNode) {
 		// 往数组中添加回调函数， performSyncWorkOnRoot
 		// performSyncWorkOnRoot 就是执行render的入口
 		scheduleSyncCallback(performSyncWorkOnRoot.bind(null, root, updateLane));
-
 		// 在微任务回调中执行 flushSyncCallbacks
 		scheduleMicroTask(flushSyncCallbacks);
 	} else {
@@ -93,7 +92,7 @@ function markUpdateFromFiberToRoot(fiber: FiberNode) {
 function performSyncWorkOnRoot(root: FiberRootNode, lane: Lane) {
 
 	console.log('performSyncWorkOnRoot 执行')
-	debugger
+
 	const nextLane = getHighestPriorityLane(root.pendingLanes);
 
 
@@ -184,8 +183,10 @@ function commitRoot(root: FiberRootNode) {
 	if (subtreeHasEffect || rootHasEffect) {
 		// beforeMutation
 		// mutation Placement
+		
+		// 修改真实dom
 		commitMutationEffects(finishedWork, root);
-
+	
 		root.current = finishedWork;
 
 		// layout

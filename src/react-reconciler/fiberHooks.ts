@@ -270,6 +270,7 @@ function mountState<State>(
 	return [memoizedState, dispatch];
 }
 
+
 function dispatchSetState<State>(
 	fiber: FiberNode,
 	updateQueue: UpdateQueue<State>,
@@ -278,6 +279,8 @@ function dispatchSetState<State>(
 	const lane = requestUpdateLane();
 	const update = createUpdate(action, lane);
 	enqueueUpdate(updateQueue, update);
+
+	
 	scheduleUpdateOnFiber(fiber, lane);
 }
 

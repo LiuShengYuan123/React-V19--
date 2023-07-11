@@ -47,6 +47,7 @@ function ChildReconciler(shouldTrackEffects: boolean) {
             // update
             if (currentFiber.key === key) {
                 // key相同
+                debugger
                 if (element.$$typeof === REACT_ELEMENT_TYPE) {
                     if (currentFiber.type === element.type) {
                         let props = element.props;
@@ -273,6 +274,7 @@ function ChildReconciler(shouldTrackEffects: boolean) {
         if (typeof newChild === 'object' && newChild !== null) {
             // 多节点的情况 ul> li*3
             if (Array.isArray(newChild)) {
+                debugger
                 return reconcileChildrenArray(returnFiber, currentFiber, newChild);
             }
 

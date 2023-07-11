@@ -89,6 +89,7 @@ export class FiberRootNode {
 	}
 }
 
+// current 老节点的子节点， 新element对象的props
 export const createWorkInProgress = (
 	current: FiberNode,
 	pendingProps: Props

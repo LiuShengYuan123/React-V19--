@@ -85,7 +85,7 @@ const commitMutaitonEffectsOnFiber = (
     }
     if ((flags & PassiveEffect) !== NoFlags) {
         // 收集回调
-        debugger
+
         commitPassiveEffect(finishedWork, root, 'update');
         finishedWork.flags &= ~PassiveEffect;
     }

@@ -54,19 +54,25 @@ function Bpp() {
 }
 
 function App() {
-	const [arr, setArr] = useState(['a', 'b','c'])
+	const [count, setCount] = useState(0)
+	const [count2, setCount2] = useState(2)
+	// 已经在递阶段，修改App的fiber对象
+	// a=>a
+	// effect的hooks也是环状链表 a=>b => =a
+	useEffect(effect1)
+
+	useEffect(effect2)
 
 	function handle_click() {
-		debugger
-		setArr(['c','b','a'])
+		setCount(count + 1)
 	}
 	// a => a
 	return (
 		<div >
-			<button onClick={handle_click}>点我改变</button>
-			{arr.map((item) => {
-				return <h1>{item}</h1>
-			})}
+			<h1 onClick={handle_click}>点我新增22 {count}</h1>
+			
+			<Bpp />
+			{/* <h2>{count}</h2> */}
 		</div>
 	);	
 }
