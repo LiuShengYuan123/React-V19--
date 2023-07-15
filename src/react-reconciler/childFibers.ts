@@ -47,7 +47,7 @@ function ChildReconciler(shouldTrackEffects: boolean) {
             // update
             if (currentFiber.key === key) {
                 // key相同
-                debugger
+    
                 if (element.$$typeof === REACT_ELEMENT_TYPE) {
                     if (currentFiber.type === element.type) {
                         let props = element.props;

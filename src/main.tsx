@@ -54,21 +54,27 @@ function Bpp() {
 }
 
 function App() {
-	const [arr, setArr] = useState(['a', 'b','c'])
+	const [arr, setArr] = useState(['a', 'b', 'c'])
 
 	function handle_click() {
 		debugger
-		setArr(['c','b','a'])
+		setArr(['c', 'b', 'a'])
 	}
 	// a => a
+	// <div><p><li1><li2><li3></div>  手写
+	// <div>for(3个li)</div>  js写
+
+	// 注意： diff不是针对for循环，而是所有的元素只要有多个子节点就会diff
 	return (
 		<div >
 			<button onClick={handle_click}>点我改变</button>
-			{arr.map((item) => {
-				return <h1>{item}</h1>
-			})}
+			<div className='for'>
+				{arr.map((item) => {
+					return <h1 key={item}>{item}</h1>
+				})}
+			</div>
 		</div>
-	);	
+	);
 }
 
 
