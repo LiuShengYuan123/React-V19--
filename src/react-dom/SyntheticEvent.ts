@@ -42,6 +42,8 @@ export function initEvent(container: Container, eventType: string) {
 function createSyntheticEvent(e: Event) {
     const syntheticEvent = e as SyntheticEvent;
     syntheticEvent.__stopPropagation = false;
+
+    // 浏览器原生的阻止冒泡
     const originStopPropagation = e.stopPropagation;
 
     syntheticEvent.stopPropagation = () => {
@@ -54,6 +56,9 @@ function createSyntheticEvent(e: Event) {
 }
 
 function dispatchEvent(container: Container, eventType: string, e: Event) {
+
+
+    // 点击的哪个元素？
     const targetElement = e.target;
 
     if (targetElement === null) {
@@ -111,6 +116,7 @@ function collectPaths(
         // 收集
 
         // 这里可以获取真实dom对应的props
+        // 创建fiber树的时候，会生成statNode
         const elementProps = targetElement[elementPropsKey];
         if (elementProps) {
             // click -> onClick onClickCapture

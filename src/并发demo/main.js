@@ -89,6 +89,7 @@ function schedule() {
 
 	const { priority: curPriority } = curWork;
 	if (curPriority === prevPriority) {
+		console.log('curPriority === prevPriority')
 		return;
 	}
 	// 更高优先级的work
@@ -97,8 +98,12 @@ function schedule() {
 	console.log('cbNode', cbNode)
 
 	// scheduleCallback就是一个宏任务执行器，可以类比setTimeout  postMessage
-
+	// console.time('scheduleCallback')
+	// debugger
 	curCallback = scheduleCallback(curPriority, perform.bind(null, curWork));
+	// console.timeEnd('scheduleCallback')
+	// console.time('scheduleCallback2')
+	// console.timeEnd('scheduleCallback2')
 	console.log('curCallback',curCallback)
 	// curCallback返回值
 	// callback: ƒ ()
