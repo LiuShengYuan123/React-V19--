@@ -1,4 +1,10 @@
 import { Container } from './hostConfig';
+import {
+    unstable_ImmediatePriority,
+    unstable_NormalPriority,
+    unstable_runWithPriority,
+    unstable_UserBlockingPriority
+} from 'scheduler';
 import { Props } from '@/shared/ReactTypes';
 
 export const elementPropsKey = '__props';
@@ -29,11 +35,9 @@ export function initEvent(container: Container, eventType: string) {
         console.warn('当前不支持', eventType, '事件');
         return;
     }
+
     console.log('初始化事件：', eventType);
 
-    // debugger
-
-    // 在react中事件都绑定在  rect的容器根节点
     container.addEventListener(eventType, (e) => {
         dispatchEvent(container, eventType, e);
     });
@@ -42,8 +46,6 @@ export function initEvent(container: Container, eventType: string) {
 function createSyntheticEvent(e: Event) {
     const syntheticEvent = e as SyntheticEvent;
     syntheticEvent.__stopPropagation = false;
-
-    // 浏览器原生的阻止冒泡
     const originStopPropagation = e.stopPropagation;
 
     syntheticEvent.stopPropagation = () => {
@@ -56,16 +58,14 @@ function createSyntheticEvent(e: Event) {
 }
 
 function dispatchEvent(container: Container, eventType: string, e: Event) {
-
-
-    // 点击的哪个元素？
     const targetElement = e.target;
 
     if (targetElement === null) {
         console.warn('事件不存在target', e);
         return;
     }
-    // 1. 收集沿途的事件   点击之后将会触发哪些事件
+
+    // 1. 收集沿途的事件
     const { bubble, capture } = collectPaths(
         targetElement as DOMElement,
         container,
@@ -74,11 +74,11 @@ function dispatchEvent(container: Container, eventType: string, e: Event) {
     // 2. 构造合成事件
     const se = createSyntheticEvent(e);
 
-    // 3. 遍历captue   执行捕获事件
+    // 3. 遍历captue
     triggerEventFlow(capture, se);
 
     if (!se.__stopPropagation) {
-        // 4. 遍历bubble   执行冒泡事件
+        // 4. 遍历bubble
         triggerEventFlow(bubble, se);
     }
 }
@@ -86,7 +86,10 @@ function dispatchEvent(container: Container, eventType: string, e: Event) {
 function triggerEventFlow(paths: EventCallback[], se: SyntheticEvent) {
     for (let i = 0; i < paths.length; i++) {
         const callback = paths[i];
-        callback.call(null, se);
+        // 根据优先级调用回调
+        unstable_runWithPriority(eventTypeToSchedulerPriority(se.type), () => {
+            callback.call(null, se);
+        });
 
         if (se.__stopPropagation) {
             break;
@@ -114,16 +117,10 @@ function collectPaths(
 
     while (targetElement && targetElement !== container) {
         // 收集
-
-        // 这里可以获取真实dom对应的props
-        // 创建fiber树的时候，会生成statNode
         const elementProps = targetElement[elementPropsKey];
         if (elementProps) {
             // click -> onClick onClickCapture
             const callbackNameList = getEventCallbackNameFromEventType(eventType);
-
-            console.log('callbackNameList',callbackNameList)
-
             if (callbackNameList) {
                 callbackNameList.forEach((callbackName, i) => {
                     const eventCallback = elementProps[callbackName];
@@ -140,7 +137,18 @@ function collectPaths(
         }
         targetElement = targetElement.parentNode as DOMElement;
     }
-
-    console.log('paths', paths)
     return paths;
+}
+
+function eventTypeToSchedulerPriority(eventType: string) {
+    switch (eventType) {
+        case 'click':
+        case 'keydown':
+        case 'keyup':
+            return unstable_ImmediatePriority;
+        case 'scroll':
+            return unstable_UserBlockingPriority;
+        default:
+            return unstable_NormalPriority;
+    }
 }

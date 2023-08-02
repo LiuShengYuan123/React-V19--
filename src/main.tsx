@@ -67,7 +67,7 @@ function App() {
 	// 注意： diff不是针对for循环，而是所有的元素只要有多个子节点就会diff
 	return (
 		<div >
-			<button onClick={handle_click}>点我改变</button>
+			<button onClick={handle_click} >点我改变</button>
 			<div className='for'>
 				{arr.map((item) => {
 					return <h1 key={item}>{item}</h1>

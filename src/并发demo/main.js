@@ -100,6 +100,11 @@ function schedule() {
 	// scheduleCallback就是一个宏任务执行器，可以类比setTimeout  postMessage
 	// console.time('scheduleCallback')
 	// debugger
+
+
+	// 执行postMessage的宏任务异步回调
+	// 返还一个包含时间戳和优先级的对象
+
 	curCallback = scheduleCallback(curPriority, perform.bind(null, curWork));
 	// console.timeEnd('scheduleCallback')
 	// console.time('scheduleCallback2')
@@ -139,6 +144,7 @@ function perform(work, didTimeout) {
 	// shouldYield()会在while过程中，不断的去计算，此时我们还有没有剩余时间
 	// 一轮时间循环，留给任务处理的时间，大概7,8ms
 
+	// react的时间切片  为5ms
 	while ((needSync || !shouldYield()) && work.count) {
 		work.count--;
 		insertSpan(work.priority + '');

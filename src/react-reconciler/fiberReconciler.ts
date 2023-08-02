@@ -23,6 +23,7 @@ export function updateContainer(
 	root: FiberRootNode
 ) {
 	const hostRootFiber = root.current;
+	// 渲染优先级
 	const lane = requestUpdateLane();
 	const update = createUpdate<ReactElementType | null>(element, lane);
 	enqueueUpdate(
